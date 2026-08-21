@@ -8,11 +8,11 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-    <title>네이버 지도 - 식당 지도</title>
+    <title>식당 지도</title>
 
 
     <!-- =====================================================
-    네이버 지도 API
+        네이버 지도 API
         ===================================================== -->
 
     <script
@@ -38,7 +38,277 @@
         #map {
 
             width: 100%;
-            height: 900px;
+            height: 100%;
+
+        }
+
+
+        /* =====================================================
+        검색창
+           ===================================================== */
+
+        #search-box {
+
+            position: absolute;
+
+            top: 15px;
+            left: 15px;
+
+            z-index: 1000;
+
+            display: flex;
+
+            width: 330px;
+
+            background: white;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.25);
+
+            overflow: hidden;
+
+        }
+
+
+        #address-input {
+
+            flex: 1;
+
+            height: 42px;
+
+            border: none;
+
+            padding: 0 13px;
+
+            outline: none;
+
+            font-size: 14px;
+
+        }
+
+
+        #search-button {
+
+            width: 60px;
+
+            height: 42px;
+
+            border: none;
+
+            background: #03c75a;
+
+            color: white;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+        }
+
+
+        #search-button:hover {
+
+            background: #02b351;
+
+        }
+
+
+        /* =====================================================
+        현재 위치 버튼
+           ===================================================== */
+
+        #current-location-button {
+
+            position: absolute;
+
+            right: 15px;
+            bottom: 15px;
+
+            width: 42px;
+            height: 42px;
+
+            background: white;
+
+            border: 1px solid #ddd;
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 2px 6px rgba(0,0,0,0.25);
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            z-index: 1000;
+
+        }
+
+
+        #current-location-button:hover {
+
+            background: #f5f5f5;
+
+        }
+
+
+        /* 현재 위치 아이콘 */
+
+        .location-icon {
+
+            position: relative;
+
+            width: 20px;
+            height: 20px;
+
+        }
+
+
+        .location-icon::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 7px;
+            height: 7px;
+
+            border: 2px solid #555;
+
+            background: white;
+
+            border-radius: 50%;
+
+            left: 50%;
+            top: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            box-sizing: border-box;
+
+        }
+
+
+        .location-icon i {
+
+            position: absolute;
+
+            display: block;
+
+            background: #555;
+
+        }
+
+
+        .location-icon .top {
+
+            width: 2px;
+            height: 6px;
+
+            left: 9px;
+            top: 0;
+
+        }
+
+
+        .location-icon .bottom {
+
+            width: 2px;
+            height: 6px;
+
+            left: 9px;
+            bottom: 0;
+
+        }
+
+
+        .location-icon .left {
+
+            width: 6px;
+            height: 2px;
+
+            left: 0;
+            top: 9px;
+
+        }
+
+
+        .location-icon .right {
+
+            width: 6px;
+            height: 2px;
+
+            right: 0;
+            top: 9px;
+
+        }
+
+
+        /* =====================================================
+        로딩
+           ===================================================== */
+
+        #loading {
+
+            position: absolute;
+
+            top: 70px;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            z-index: 1000;
+
+            background: white;
+
+            padding: 8px 15px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 2px 8px rgba(0,0,0,0.2);
+
+            font-size: 13px;
+
+            font-family: Arial, sans-serif;
+
+        }
+
+
+        /* =====================================================
+        식당 수 표시
+           ===================================================== */
+
+        #restaurant-count {
+
+            position: absolute;
+
+            right: 15px;
+            top: 15px;
+
+            z-index: 1000;
+
+            background: white;
+
+            padding: 8px 12px;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 2px 6px rgba(0,0,0,0.2);
+
+            font-size: 13px;
+
+            font-family: Arial, sans-serif;
 
         }
 
@@ -50,7 +320,69 @@
 <body>
 
 
+<!-- =========================================================
+    검색창
+    ========================================================= -->
+
+<div id="search-box">
+
+    <input
+        type="text"
+        id="address-input"
+        placeholder="시군구 검색"
+    >
+
+    <button id="search-button">
+        검색
+    </button>
+
+</div>
+
+
+<!-- =========================================================
+    로딩
+    ========================================================= -->
+
+<div id="loading">
+    데이터를 불러오는 중...
+</div>
+
+
+<!-- =========================================================
+    현재 표시 식당 수
+    ========================================================= -->
+
+<div id="restaurant-count">
+    식당 0개
+</div>
+
+
+<!-- =========================================================
+    지도
+    ========================================================= -->
+
 <div id="map"></div>
+
+
+<!-- =========================================================
+    현재 위치 버튼
+    ========================================================= -->
+
+<button
+    id="current-location-button"
+    title="현재 위치">
+
+    <span class="location-icon">
+
+        <i class="top"></i>
+        <i class="bottom"></i>
+        <i class="left"></i>
+        <i class="right"></i>
+
+    </span>
+
+</button>
+
 
 
 <script>
@@ -60,38 +392,76 @@
 // 1. Google Sheets 설정
 // ============================================================
 
-
-// Google Sheets ID
-//
-// https://docs.google.com/spreadsheets/d/여기/edit
+// ------------------------------------------------------------
+// Google Spreadsheet ID
+// ------------------------------------------------------------
 
 const SHEET_ID =
     "1VLDHsnqLcnQDPW5zwV-_Yc9-9zFwgNY2sCsGnyy491w";
 
 
-// 시트 GID
+// ------------------------------------------------------------
+// 식당 데이터가 있는 시트의 GID
+// A = 상호명
+// B = 주소
+// C = 종류
+// D = 연락처
+// E = 위도
+// F = 경도
+// ------------------------------------------------------------
+
+const RESTAURANT_GID = "1966840128";
+
+
+// ------------------------------------------------------------
+// 시군구 좌표가 있는 시트의 GID
 //
-// 첫 번째 시트라면 보통 0
+// A = 시군구
+// B = 위도
+// C = 경도
+//
+// ★ 여기에 실제 시군구 데이터 시트의 GID 입력
+// ------------------------------------------------------------
 
-const GID = "1966840128";
+const REGION_GID = "63528876";
 
 
-// Google Sheets GViz JSON
+/* ============================================================
+예:
 
-const SHEET_URL =
+https://docs.google.com/spreadsheets/d/XXXXX/edit#gid=123456
 
-    "https://docs.google.com/spreadsheets/d/" +
+여기서
 
-    SHEET_ID +
+123456
 
-    "/gviz/tq?tqx=out:json&gid=" +
-
-    GID;
-
+이 부분이 GID입니다.
+   ============================================================ */
 
 
 // ============================================================
-// 2. 지도 생성
+// 2. 전체 식당 데이터
+// ============================================================
+
+var restaurants = [];
+
+
+// ============================================================
+// 3. 시군구 좌표 데이터
+// ============================================================
+
+var regions = [];
+
+
+// ============================================================
+// 4. 현재 표시 중인 Marker
+// ============================================================
+
+var markers = [];
+
+
+// ============================================================
+// 5. 지도 생성
 // ============================================================
 
 var map = new naver.maps.Map(
@@ -99,22 +469,30 @@ var map = new naver.maps.Map(
     'map',
 
     {
+
         zoom: 15,
+
+        // ----------------------------------------------------
+        // 15보다 더 축소할 수 없음
+        // ----------------------------------------------------
+
         minZoom: 15,
+
         mapTypeId: 'normal',
+
         center:
             new naver.maps.LatLng(
                 37.5,
                 127.1
             )
+
     }
 
 );
 
 
-
 // ============================================================
-// 3. InfoWindow
+// 6. InfoWindow
 // ============================================================
 
 var infoWindow =
@@ -138,283 +516,386 @@ var infoWindow =
     });
 
 
-
 // ============================================================
-// 4. 전체 식당 데이터
-// ============================================================
-
-var restaurantData = [];
-
-
-
-// ============================================================
-// 5. 현재 지도에 표시된 Marker
+// 7. 식당 데이터 전체 1회 로딩
 // ============================================================
 
-var markers = {};
+function loadAllRestaurants() {
 
 
+    var query =
 
-// ============================================================
-// 6. Google Sheets 가져오기
-// ============================================================
+        "SELECT A,B,C,D,E,F " +
 
-fetch(SHEET_URL)
+        "WHERE E IS NOT NULL " +
 
-    .then(function(response) {
-
-        return response.text();
-
-    })
-
-    .then(function(text) {
+        "AND F IS NOT NULL";
 
 
-        // -----------------------------------------------
-        // GViz 응답에서 JSON 부분만 추출
-        // -----------------------------------------------
+    var url =
 
-        var jsonText =
+        "https://docs.google.com/spreadsheets/d/" +
 
-            text.substring(
+        SHEET_ID +
 
-                text.indexOf('{'),
+        "/gviz/tq?" +
 
-                text.lastIndexOf('}') + 1
+        "tqx=out:json" +
+
+        "&gid=" +
+
+        RESTAURANT_GID +
+
+        "&tq=" +
+
+        encodeURIComponent(query);
+
+
+    fetch(url)
+
+        .then(function(response) {
+
+            return response.text();
+
+        })
+
+        .then(function(text) {
+
+
+            var jsonText =
+
+                text.substring(
+
+                    text.indexOf('{'),
+
+                    text.lastIndexOf('}') + 1
+
+                );
+
+
+            var data =
+                JSON.parse(jsonText);
+
+
+            var rows =
+                data.table.rows;
+
+
+            restaurants = [];
+
+
+            rows.forEach(
+
+                function(row) {
+
+
+                    var name =
+                        row.c[0]?.v || "";
+
+
+                    var address =
+                        row.c[1]?.v || "";
+
+
+                    var category =
+                        row.c[2]?.v || "";
+
+
+                    var phone =
+                        row.c[3]?.v || "";
+
+
+                    var latitude =
+                        parseFloat(
+                            row.c[4]?.v
+                        );
+
+
+                    var longitude =
+                        parseFloat(
+                            row.c[5]?.v
+                        );
+
+
+                    if (
+
+                        isNaN(latitude) ||
+
+                        isNaN(longitude)
+
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    restaurants.push({
+
+                        name:
+                            name,
+
+                        address:
+                            address,
+
+                        category:
+                            category,
+
+                        phone:
+                            phone,
+
+                        latitude:
+                            latitude,
+
+                        longitude:
+                            longitude
+
+                    });
+
+                }
 
             );
 
-
-        var data =
-
-            JSON.parse(jsonText);
-
-
-        var rows =
-
-            data.table.rows;
-
-
-        console.log(
-            "Google Sheets 전체 데이터:",
-            rows
-        );
-
-
-        // -----------------------------------------------
-        // 식당 데이터 생성
-        // -----------------------------------------------
-
-        restaurantData =
-
-            createRestaurantData(rows);
-
-
-        console.log(
-            "정상적인 식당 데이터:",
-            restaurantData
-        );
-
-
-        // -----------------------------------------------
-        // 현재 화면에 있는 식당 표시
-        // -----------------------------------------------
-
-        updateVisibleRestaurants();
-
-
-    })
-
-    .catch(function(error) {
-
-        console.error(
-
-            "Google Sheets 데이터를 가져오지 못했습니다.",
-
-            error
-
-        );
-
-    });
-
-
-
-// ============================================================
-// 7. Google Sheets → 식당 데이터
-// ============================================================
-
-function createRestaurantData(rows) {
-
-
-    var result = [];
-
-
-    rows.forEach(function(row, index) {
-
-
-        // ------------------------------------------------
-        // Google Sheets 컬럼
-        //
-        // A = 상호명
-        // B = 주소
-        // C = 종류
-        // D = 연락처
-        // E = 위도
-        // F = 경도
-        // ------------------------------------------------
-
-
-        var name =
-
-            row.c[0]?.v || "";
-
-
-        var address =
-
-            row.c[1]?.v || "";
-
-
-        var category =
-
-            row.c[2]?.v || "";
-
-
-        var phone =
-
-            row.c[3]?.v || "";
-
-
-        var latitude =
-
-            row.c[4]?.v || "";
-
-
-        var longitude =
-
-            row.c[5]?.v || "";
-
-
-
-        // ------------------------------------------------
-        // 필수값 확인
-        // ------------------------------------------------
-
-        if (
-
-            !name ||
-
-            !latitude ||
-
-            !longitude
-
-        ) {
 
             console.log(
-
-                "좌표가 없어서 제외:",
-
-                name
-
+                "전체 식당:",
+                restaurants.length
             );
 
-            return;
 
-        }
-
+            checkLoadingComplete();
 
 
-        latitude =
+            updateMarkers();
 
-            parseFloat(latitude);
+        })
 
-
-        longitude =
-
-            parseFloat(longitude);
+        .catch(function(error) {
 
 
-
-        // ------------------------------------------------
-        // 숫자 확인
-        // ------------------------------------------------
-
-        if (
-
-            isNaN(latitude) ||
-
-            isNaN(longitude)
-
-        ) {
-
-            console.log(
-
-                "좌표가 숫자가 아님:",
-
-                name
-
+            console.error(
+                "식당 데이터 오류:",
+                error
             );
 
-            return;
 
-        }
-
-
-
-        // ------------------------------------------------
-        // 식당 객체
-        // ------------------------------------------------
-
-        result.push({
-
-            id:
-                index,
-
-            name:
-                name,
-
-            address:
-                address,
-
-            category:
-                category,
-
-            phone:
-                phone,
-
-            latitude:
-                latitude,
-
-            longitude:
-                longitude
+            document.getElementById(
+                "loading"
+            ).innerText =
+                "데이터를 불러오지 못했습니다.";
 
         });
-
-    });
-
-
-    return result;
 
 }
 
 
+// ============================================================
+// 8. 시군구 좌표 전체 1회 로딩
+// ============================================================
+
+function loadRegions() {
+
+
+    var query =
+
+        "SELECT A,B,C " +
+
+        "WHERE B IS NOT NULL " +
+
+        "AND C IS NOT NULL";
+
+
+    var url =
+
+        "https://docs.google.com/spreadsheets/d/" +
+
+        SHEET_ID +
+
+        "/gviz/tq?" +
+
+        "tqx=out:json" +
+
+        "&gid=" +
+
+        REGION_GID +
+
+        "&tq=" +
+
+        encodeURIComponent(query);
+
+
+    fetch(url)
+
+        .then(function(response) {
+
+            return response.text();
+
+        })
+
+        .then(function(text) {
+
+
+            var jsonText =
+
+                text.substring(
+
+                    text.indexOf('{'),
+
+                    text.lastIndexOf('}') + 1
+
+                );
+
+
+            var data =
+                JSON.parse(jsonText);
+
+
+            var rows =
+                data.table.rows;
+
+
+            regions = [];
+
+
+            rows.forEach(
+
+                function(row) {
+
+
+                    // ----------------------------------------
+                    // A열 = 시군구
+                    // ----------------------------------------
+
+                    var sigungu =
+                        row.c[0]?.v || "";
+
+
+                    // ----------------------------------------
+                    // B열 = 위도
+                    // ----------------------------------------
+
+                    var latitude =
+                        parseFloat(
+                            row.c[1]?.v
+                        );
+
+
+                    // ----------------------------------------
+                    // C열 = 경도
+                    // ----------------------------------------
+
+                    var longitude =
+                        parseFloat(
+                            row.c[2]?.v
+                        );
+
+
+                    if (
+
+                        isNaN(latitude) ||
+
+                        isNaN(longitude)
+
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    regions.push({
+
+                        sigungu:
+                            sigungu,
+
+                        latitude:
+                            latitude,
+
+                        longitude:
+                            longitude
+
+                    });
+
+                }
+
+            );
+
+
+            console.log(
+                "전체 시군구:",
+                regions.length
+            );
+
+
+            checkLoadingComplete();
+
+        })
+
+        .catch(function(error) {
+
+
+            console.error(
+                "시군구 데이터 오류:",
+                error
+            );
+
+        });
+
+}
+
 
 // ============================================================
-// 8. 현재 지도 영역의 식당만 표시
+// 9. 두 데이터 로딩 완료 확인
 // ============================================================
 
-function updateVisibleRestaurants() {
+var restaurantLoaded = false;
+
+var regionLoaded = false;
 
 
-    // --------------------------------------------------------
-    // Google Sheets 데이터를 아직 가져오지 않았다면 종료
-    // --------------------------------------------------------
+function checkLoadingComplete() {
 
     if (
+        restaurants.length > 0
+    ) {
 
-        !restaurantData ||
+        restaurantLoaded = true;
 
-        restaurantData.length === 0
+    }
 
+
+    if (
+        regions.length > 0
+    ) {
+
+        regionLoaded = true;
+
+    }
+
+
+    if (
+        restaurantLoaded &&
+        regionLoaded
+    ) {
+
+        document.getElementById(
+            "loading"
+        ).style.display = "none";
+
+    }
+
+}
+
+
+// ============================================================
+// 10. 현재 지도 영역 식당 필터링
+// ============================================================
+
+function updateMarkers() {
+
+
+    if (
+        restaurants.length === 0
     ) {
 
         return;
@@ -422,30 +903,119 @@ function updateVisibleRestaurants() {
     }
 
 
-
-    // --------------------------------------------------------
-    // 현재 지도 영역
-    // --------------------------------------------------------
-
     var bounds =
-
         map.getBounds();
 
 
+    var sw =
+        bounds.getSW();
+
+
+    var ne =
+        bounds.getNE();
+
+
+    var south =
+        sw.lat();
+
+
+    var west =
+        sw.lng();
+
+
+    var north =
+        ne.lat();
+
+
+    var east =
+        ne.lng();
+
+
+    var visibleRestaurants =
+
+        restaurants.filter(
+
+            function(restaurant) {
+
+
+                return (
+
+                    restaurant.latitude >=
+                    south
+
+                    &&
+
+                    restaurant.latitude <=
+                    north
+
+                    &&
+
+                    restaurant.longitude >=
+                    west
+
+                    &&
+
+                    restaurant.longitude <=
+                    east
+
+                );
+
+            }
+
+        );
+
+
+    displayMarkers(
+        visibleRestaurants
+    );
+
+
+    document.getElementById(
+        "restaurant-count"
+    ).innerText =
+
+        "식당 " +
+        visibleRestaurants.length +
+        "개";
+
+}
+
+
+// ============================================================
+// 11. Marker 표시
+// ============================================================
+
+function displayMarkers(
+    visibleRestaurants
+) {
+
 
     // --------------------------------------------------------
-    // 현재 영역에 있는 식당 ID 저장
+    // 기존 Marker 제거
     // --------------------------------------------------------
 
-    var visibleIds = {};
+    markers.forEach(
+
+        function(marker) {
+
+            marker.setMap(null);
+
+        }
+
+    );
 
 
+    markers = [];
 
-    // ========================================================
-    // 전체 식당 확인
-    // ========================================================
 
-    restaurantData.forEach(
+    infoWindow.close();
+
+
+    // --------------------------------------------------------
+    // 현재 영역 식당 Marker 생성
+    // --------------------------------------------------------
+
+    visibleRestaurants.forEach(
 
         function(restaurant) {
 
@@ -461,77 +1031,209 @@ function updateVisibleRestaurants() {
                 );
 
 
+            var marker =
 
-            // ------------------------------------------------
-            // 현재 지도 영역 안에 있는지 확인
-            // ------------------------------------------------
+                new naver.maps.Marker({
 
-            if (
+                    position:
+                        position,
 
-                bounds.hasLatLng(position)
+                    map:
+                        map,
 
-            ) {
+                    icon: {
 
+                        content:
 
-                visibleIds[
-                    restaurant.id
-                ] = true;
+                            '<div style="' +
 
+                            'width:30px;' +
+                            'height:30px;' +
+                            'position:relative;' +
 
-
-                // ------------------------------------------------
-                // 이미 Marker가 있다면 만들지 않음
-                // ------------------------------------------------
-
-                if (
-
-                    !markers[
-                        restaurant.id
-                    ]
-
-                ) {
+                            '">' +
 
 
-                    createMarker(
+                            '<div style="' +
 
-                        restaurant
+                            'position:absolute;' +
+                            'left:2px;' +
+                            'top:2px;' +
+                            'width:24px;' +
+                            'height:24px;' +
+                            'background:#ff3b30;' +
+                            'border-radius:50% 50% 50% 0;' +
+                            'transform:rotate(-45deg);' +
+                            'border:2px solid white;' +
+                            'box-shadow:0 2px 4px rgba(0,0,0,0.3);' +
 
+                            '">' +
+
+
+                            '<div style="' +
+
+                            'position:absolute;' +
+                            'width:8px;' +
+                            'height:8px;' +
+                            'background:white;' +
+                            'border-radius:50%;' +
+                            'left:8px;' +
+                            'top:8px;' +
+
+                            '"></div>' +
+
+
+                            '</div>' +
+
+
+                            '</div>',
+
+
+                        anchor:
+
+                            new naver.maps.Point(
+                                15,
+                                30
+                            )
+
+                    }
+
+                });
+
+
+            // =================================================
+            // Marker 클릭
+            // =================================================
+
+            naver.maps.Event.addListener(
+
+                marker,
+
+                'click',
+
+                function() {
+
+
+                    var content =
+
+
+                        '<div style="' +
+
+                        'padding:14px 16px;' +
+                        'background:white;' +
+                        'border-radius:10px;' +
+                        'box-shadow:0 2px 10px rgba(0,0,0,0.25);' +
+                        'font-family:Arial,sans-serif;' +
+                        'min-width:230px;' +
+                        'max-width:300px;' +
+
+                        '">' +
+
+
+                        // ------------------------------------------------
+                        // 상호명
+                        // ------------------------------------------------
+
+                        '<div style="' +
+
+                        'font-size:17px;' +
+                        'font-weight:bold;' +
+                        'color:#222;' +
+                        'margin-bottom:9px;' +
+
+                        '">' +
+
+                        escapeHtml(
+                            restaurant.name
+                        ) +
+
+                        '</div>' +
+
+
+                        // ------------------------------------------------
+                        // 종류
+                        // ------------------------------------------------
+
+                        '<div style="' +
+
+                        'font-size:13px;' +
+                        'color:#777;' +
+                        'margin-bottom:7px;' +
+
+                        '">' +
+
+                        '🍴 ' +
+
+                        escapeHtml(
+                            restaurant.category
+                        ) +
+
+                        '</div>' +
+
+
+                        // ------------------------------------------------
+                        // 주소
+                        // ------------------------------------------------
+
+                        '<div style="' +
+
+                        'font-size:13px;' +
+                        'color:#444;' +
+                        'line-height:1.5;' +
+                        'margin-bottom:7px;' +
+
+                        '">' +
+
+                        '📍 ' +
+
+                        escapeHtml(
+                            restaurant.address
+                        ) +
+
+                        '</div>' +
+
+
+                        // ------------------------------------------------
+                        // 전화번호
+                        // ------------------------------------------------
+
+                        '<div style="' +
+
+                        'font-size:13px;' +
+                        'color:#444;' +
+
+                        '">' +
+
+                        '☎ ' +
+
+                        escapeHtml(
+                            restaurant.phone
+                        ) +
+
+                        '</div>' +
+
+
+                        '</div>';
+
+
+                    infoWindow.setContent(
+                        content
+                    );
+
+
+                    infoWindow.open(
+                        map,
+                        position
                     );
 
                 }
 
-            }
-
-        }
-
-    );
+            );
 
 
-
-    // ========================================================
-    // 현재 영역 밖으로 나간 Marker 제거
-    // ========================================================
-
-    Object.keys(markers).forEach(
-
-        function(id) {
-
-
-            if (
-
-                !visibleIds[id]
-
-            ) {
-
-
-                markers[id].setMap(
-                    null
-                );
-
-
-                delete markers[id];
-
-            }
+            markers.push(
+                marker
+            );
 
         }
 
@@ -540,327 +1242,8 @@ function updateVisibleRestaurants() {
 }
 
 
-
 // ============================================================
-// 9. Marker 생성
-// ============================================================
-
-function createMarker(restaurant) {
-
-
-    var position =
-
-        new naver.maps.LatLng(
-
-            restaurant.latitude,
-
-            restaurant.longitude
-
-        );
-
-
-
-    // ========================================================
-    // 물방울 아이콘
-    // ========================================================
-
-    var marker =
-
-        new naver.maps.Marker({
-
-            position:
-                position,
-
-            map:
-                map,
-
-            icon: {
-
-                content:
-
-                    '<div style="' +
-
-                    'width:30px;' +
-
-                    'height:30px;' +
-
-                    'position:relative;' +
-
-                    '">' +
-
-
-                    // ----------------------------------------
-                    // 물방울
-                    // ----------------------------------------
-
-                    '<div style="' +
-
-                    'position:absolute;' +
-
-                    'left:2px;' +
-
-                    'top:2px;' +
-
-                    'width:24px;' +
-
-                    'height:24px;' +
-
-                    'background:#ff3b30;' +
-
-                    'border-radius:50% 50% 50% 0;' +
-
-                    'transform:rotate(-45deg);' +
-
-                    'border:2px solid white;' +
-
-                    'box-shadow:0 2px 4px rgba(0,0,0,0.3);' +
-
-                    '">' +
-
-
-                        // 가운데 흰색 점
-
-                        '<div style="' +
-
-                        'position:absolute;' +
-
-                        'width:8px;' +
-
-                        'height:8px;' +
-
-                        'background:white;' +
-
-                        'border-radius:50%;' +
-
-                        'left:8px;' +
-
-                        'top:8px;' +
-
-                        '"></div>' +
-
-
-                    '</div>' +
-
-
-                    '</div>',
-
-
-                anchor:
-
-                    new naver.maps.Point(
-
-                        15,
-
-                        30
-
-                    )
-
-            }
-
-        });
-
-
-
-    // ========================================================
-    // Marker 클릭
-    // ========================================================
-
-    naver.maps.Event.addListener(
-
-        marker,
-
-        'click',
-
-        function() {
-
-
-            // ------------------------------------------------
-            // 말풍선
-            // ------------------------------------------------
-
-            var content =
-
-
-                '<div style="' +
-
-                'padding:14px 16px;' +
-
-                'background:white;' +
-
-                'border-radius:10px;' +
-
-                'box-shadow:0 2px 10px rgba(0,0,0,0.25);' +
-
-                'font-family:Arial,sans-serif;' +
-
-                'min-width:230px;' +
-
-                'max-width:300px;' +
-
-                '">' +
-
-
-
-                // ============================================
-                // 상호명
-                // ============================================
-
-                '<div style="' +
-
-                'font-size:17px;' +
-
-                'font-weight:bold;' +
-
-                'color:#222;' +
-
-                'margin-bottom:9px;' +
-
-                '">' +
-
-                escapeHtml(
-
-                    restaurant.name
-
-                ) +
-
-                '</div>' +
-
-
-
-                // ============================================
-                // 종류
-                // ============================================
-
-                '<div style="' +
-
-                'font-size:13px;' +
-
-                'color:#777;' +
-
-                'margin-bottom:7px;' +
-
-                '">' +
-
-                '🍴 ' +
-
-                escapeHtml(
-
-                    restaurant.category
-
-                ) +
-
-                '</div>' +
-
-
-
-                // ============================================
-                // 주소
-                // ============================================
-
-                '<div style="' +
-
-                'font-size:13px;' +
-
-                'color:#444;' +
-
-                'line-height:1.5;' +
-
-                'margin-bottom:7px;' +
-
-                '">' +
-
-                '📍 ' +
-
-                escapeHtml(
-
-                    restaurant.address
-
-                ) +
-
-                '</div>' +
-
-
-
-                // ============================================
-                // 전화번호
-                // ============================================
-
-                '<div style="' +
-
-                'font-size:13px;' +
-
-                'color:#444;' +
-
-                '">' +
-
-                '☎ ' +
-
-                escapeHtml(
-
-                    restaurant.phone
-
-                ) +
-
-                '</div>' +
-
-
-
-                '</div>';
-
-
-
-            // ------------------------------------------------
-            // 기존 말풍선 닫기
-            // ------------------------------------------------
-
-            infoWindow.close();
-
-
-
-            // ------------------------------------------------
-            // 새로운 말풍선
-            // ------------------------------------------------
-
-            infoWindow.setContent(
-
-                content
-
-            );
-
-
-            infoWindow.open(
-
-                map,
-
-                position
-
-            );
-
-        }
-
-    );
-
-
-
-    // ========================================================
-    // Marker 저장
-    // ========================================================
-
-    markers[restaurant.id] =
-
-        marker;
-
-}
-
-
-
-// ============================================================
-// 10. 지도 이동 / 확대 / 축소
-// ============================================================
-//
-// idle:
-// 지도 이동 또는 확대/축소가 끝났을 때 실행
-//
+// 12. 지도 이동이 끝나면 Marker 갱신
 // ============================================================
 
 naver.maps.Event.addListener(
@@ -871,17 +1254,15 @@ naver.maps.Event.addListener(
 
     function() {
 
-
-        updateVisibleRestaurants();
+        updateMarkers();
 
     }
 
 );
 
 
-
 // ============================================================
-// 11. 지도 빈 공간 클릭 → 말풍선 닫기
+// 13. 지도 빈 공간 클릭 → InfoWindow 닫기
 // ============================================================
 
 naver.maps.Event.addListener(
@@ -899,9 +1280,338 @@ naver.maps.Event.addListener(
 );
 
 
+// ============================================================
+// 14. 시군구 검색
+// ============================================================
+
+function searchRegion() {
+
+
+    var query =
+
+        document.getElementById(
+            "address-input"
+        ).value.trim();
+
+
+    if (!query) {
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // 검색어 공백 제거
+    // --------------------------------------------------------
+
+    var searchText =
+        query.replace(
+            /\s+/g,
+            ""
+        );
+
+
+    // --------------------------------------------------------
+    // 1순위:
+    // 시군구 전체 이름과 완전히 일치
+    //
+    // 예:
+    // 서울특별시종로구
+    // --------------------------------------------------------
+
+    var result =
+
+        regions.find(
+
+            function(region) {
+
+
+                var name =
+
+                    region.sigungu
+                        .replace(
+                            /\s+/g,
+                            ""
+                        );
+
+
+                return (
+                    name ===
+                    searchText
+                );
+
+            }
+
+        );
+
+
+    // --------------------------------------------------------
+    // 2순위:
+    // "종로구", "강남구"처럼 구 이름만 검색
+    // --------------------------------------------------------
+
+    if (!result) {
+
+        result =
+
+            regions.find(
+
+                function(region) {
+
+
+                    var name =
+
+                        region.sigungu
+                            .replace(
+                                /\s+/g,
+                                ""
+                            );
+
+
+                    return name.endsWith(
+                        searchText
+                    );
+
+                }
+
+            );
+
+    }
+
+
+    // --------------------------------------------------------
+    // 3순위:
+    // 일부 문자열 검색
+    // --------------------------------------------------------
+
+    if (!result) {
+
+        result =
+
+            regions.find(
+
+                function(region) {
+
+
+                    var name =
+
+                        region.sigungu
+                            .replace(
+                                /\s+/g,
+                                ""
+                            );
+
+
+                    return name.includes(
+                        searchText
+                    );
+
+                }
+
+            );
+
+    }
+
+
+    // --------------------------------------------------------
+    // 검색 실패
+    // --------------------------------------------------------
+
+    if (!result) {
+
+        alert(
+            "해당 시군구를 찾을 수 없습니다."
+        );
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // 검색된 좌표
+    // --------------------------------------------------------
+
+    var position =
+
+        new naver.maps.LatLng(
+
+            result.latitude,
+
+            result.longitude
+
+        );
+
+
+    // --------------------------------------------------------
+    // 지도 중심 이동
+    // --------------------------------------------------------
+
+    map.setCenter(
+        position
+    );
+
+
+    // --------------------------------------------------------
+    // 검색하면 zoom 16
+    //
+    // minZoom이 15이므로
+    // 16으로 확대하는 것은 문제없음
+    // --------------------------------------------------------
+
+    map.setZoom(
+        16
+    );
+
+
+    console.log(
+        "검색 지역:",
+        result.sigungu
+    );
+
+
+    console.log(
+        "좌표:",
+        result.latitude,
+        result.longitude
+    );
+
+}
+
 
 // ============================================================
-// 12. HTML 특수문자 처리
+// 15. 검색 버튼
+// ============================================================
+
+document.getElementById(
+    "search-button"
+).addEventListener(
+
+    "click",
+
+    searchRegion
+
+);
+
+
+// ============================================================
+// 16. Enter 키 검색
+// ============================================================
+
+document.getElementById(
+    "address-input"
+).addEventListener(
+
+    "keydown",
+
+    function(e) {
+
+        if (
+            e.key === "Enter"
+        ) {
+
+            searchRegion();
+
+        }
+
+    }
+
+);
+
+
+// ============================================================
+// 17. 현재 위치 버튼
+// ============================================================
+
+document.getElementById(
+    "current-location-button"
+).addEventListener(
+
+    "click",
+
+    function() {
+
+
+        if (
+            !navigator.geolocation
+        ) {
+
+            alert(
+                "이 브라우저에서는 위치 정보를 사용할 수 없습니다."
+            );
+
+            return;
+
+        }
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+
+                var currentPosition =
+
+                    new naver.maps.LatLng(
+
+                        position.coords.latitude,
+
+                        position.coords.longitude
+
+                    );
+
+
+                map.setCenter(
+                    currentPosition
+                );
+
+
+                map.setZoom(
+                    16
+                );
+
+            },
+
+
+            function(error) {
+
+
+                console.error(
+                    error
+                );
+
+
+                alert(
+                    "현재 위치를 가져올 수 없습니다.\n" +
+                    "브라우저의 위치 권한을 확인해주세요."
+                );
+
+            },
+
+
+            {
+
+                enableHighAccuracy:
+                    true,
+
+                timeout:
+                    10000,
+
+                maximumAge:
+                    0
+
+            }
+
+        );
+
+    }
+
+);
+
+
+// ============================================================
+// 18. HTML 특수문자 처리
 // ============================================================
 
 function escapeHtml(value) {
@@ -910,46 +1620,43 @@ function escapeHtml(value) {
     return String(value)
 
         .replace(
-
             /&/g,
-
             '&amp;'
-
         )
 
         .replace(
-
             /</g,
-
             '&lt;'
-
         )
 
         .replace(
-
             />/g,
-
             '&gt;'
-
         )
 
         .replace(
-
             /"/g,
-
             '&quot;'
-
         )
 
         .replace(
-
             /'/g,
-
             '&#039;'
-
         );
 
 }
+
+
+// ============================================================
+// 19. 최초 실행
+// ============================================================
+
+// 식당 데이터
+loadAllRestaurants();
+
+
+// 시군구 좌표 데이터
+loadRegions();
 
 
 </script>
