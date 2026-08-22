@@ -47,6 +47,19 @@
         검색창
            ===================================================== */
 
+        #restaurant-select {
+            position: absolute; top: 15px; left: 355px; z-index: 1000;
+            height: 42px; min-width: 150px; padding: 0 12px;
+            border: none; background: white; border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+            font-size: 14px; outline: none; cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            #restaurant-select { top: 65px; left: 15px; }
+            #search-box { width: calc(100% - 30px); }
+        }
+
         #search-box {
 
             position: absolute;
@@ -324,6 +337,12 @@
     검색창
     ========================================================= -->
 
+<select id="restaurant-select">
+    <option value="1966840128">안심식당</option>
+    <option value="817895350">맛집</option>
+    <option value="1116742341">Petfriendly</option>
+</select>
+
 <div id="search-box">
 
     <input
@@ -396,8 +415,13 @@ const SHEET_ID =
     "1VLDHsnqLcnQDPW5zwV-_Yc9-9zFwgNY2sCsGnyy491w";
 
 
-const RESTAURANT_GID =
-    "817895350";              // 1966840128
+const RESTAURANT_SHEETS = {
+    "1966840128": "안심식당",
+    "817895350": "맛집",
+    "1116742341": "Petfriendly"
+};
+
+var currentRestaurantGid = "1966840128";
 
 
 const REGION_GID =
@@ -499,7 +523,7 @@ function loadAllRestaurants() {
 
         "&gid=" +
 
-        RESTAURANT_GID +
+        currentRestaurantGid +
 
         "&tq=" +
 
@@ -1508,7 +1532,24 @@ function searchRegion() {
 
 
 // ============================================================
-// 14. 검색 버튼
+// 14. 식당 데이터 드롭다운
+// ============================================================
+
+document.getElementById("restaurant-select").addEventListener("change", function() {
+    currentRestaurantGid = this.value;
+    restaurants = [];
+    markers.forEach(function(marker) { marker.setMap(null); });
+    markers = [];
+    infoWindow.close();
+    document.getElementById("restaurant-count").innerText = "식당 0개";
+    document.getElementById("loading").innerText = "데이터를 불러오는 중...";
+    document.getElementById("loading").style.display = "block";
+    loadAllRestaurants();
+});
+
+
+// ============================================================
+// 15. 검색 버튼
 // ============================================================
 
 document.getElementById(
