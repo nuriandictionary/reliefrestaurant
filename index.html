@@ -338,16 +338,9 @@
     ========================================================= -->
 
 <select id="restaurant-select">
-    <option value="1966840128">안심식당</option>
+    
     <option value="817895350">맛집</option>
-    <option value="456097080">pet_friendly_호텔</option>
-    <option value="1669377430">pet_friendly_펜션</option>
-    <option value="572872375">pet_friendly_카페</option>
-    <option value="1769227785">pet_friendly_여행지</option>
-    <option value="814933981">pet_friendly_숙박</option>
-    <option value="1510345336">pet_friendly_음식점</option>
-    <option value="328382519">pet_friendly_레포츠</option>
-    <option value="369767679">pet_friendly_관광지</option>
+    <option value="73290037">pet_friendly</option>
     
 </select>
 
@@ -424,20 +417,11 @@ const SHEET_ID =
 
 
 const RESTAURANT_SHEETS = {
-    "1966840128": "안심식당",
     "817895350": "맛집",
-    "456097080": "pet_friendly_호텔",
-    "1669377430": "pet_friendly_펜션",
-    "572872375": "pet_friendly_카페",
-    "1769227785": "pet_friendly_여행지",
-    "814933981": "pet_friendly_숙박",
-    "1510345336": "pet_friendly_음식점",
-    "328382519": "pet_friendly_레포츠",
-    "369767679": "pet_friendly_관광지"
-    
+    "73290037": "pet_friendly"
 };
 
-var currentRestaurantGid = "1966840128";
+var currentRestaurantGid = "817895350";
 
 
 const REGION_GID =
@@ -467,9 +451,9 @@ var map = new naver.maps.Map(
 
     {
 
-        zoom: 15,
+        zoom: 13,
 
-        minZoom: 15,
+        minZoom: 13,
 
         mapTypeId: 'normal',
 
@@ -1526,7 +1510,7 @@ function searchRegion() {
 
 
     map.setZoom(
-        15
+        13
     );
 
 
